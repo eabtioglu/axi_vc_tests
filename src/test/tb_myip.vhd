@@ -6,9 +6,13 @@ library vunit_lib;
 context vunit_lib.vunit_context;
 context vunit_lib.vc_context;
 
- use work.axil_pkg.all;
- use work.axi_pkg.all;
--- use work.axi_lite_master_pkg.all;
+use work.axil_pkg.all;
+
+--use work.axi_pkg.all;
+--use work.bus_master_pkg.all;
+use vunit_lib.axi_lite_master_pkg.all;
+ --use work.axi_pkg.all;
+ --use work.axi_lite_master_pkg.all;
 
 entity tb_myip is
     generic (runner_cfg : string);
@@ -19,7 +23,7 @@ architecture tb of tb_myip is
     constant clk_period : time := 1 ns;
 
     constant axil_bus : bus_master_t := new_bus(data_length => 32,
-                                                address_length => 4,
+                                                address_length => 2,
                                                 logger => get_logger("axil_bus"));
 
 
@@ -29,7 +33,7 @@ architecture tb of tb_myip is
     signal aresetn	: std_logic:='0';
     signal awprot   : std_logic_vector(2 downto 0):="000";
     signal arprot   : std_logic_vector(2 downto 0):="000";
-    signal address  : std_logic_vector(3 downto 0);
+    signal address  : std_logic_vector(1 downto 0);
     signal data     : std_logic_vector(31 downto 0);
     signal expected_bresp : std_logic_vector(1 downto 0);
     signal byte_enable : std_logic_vector(3 downto 0) := "1111";
@@ -38,7 +42,7 @@ architecture tb of tb_myip is
         generic (
 
             C_S00_AXI_DATA_WIDTH	: integer	:= 32;
-            C_S00_AXI_ADDR_WIDTH	: integer	:= 4
+            C_S00_AXI_ADDR_WIDTH	: integer	:= 2
         );
         port (
 
@@ -71,7 +75,7 @@ begin
     dut: myip_v1_0 
     generic map(
         C_S00_AXI_DATA_WIDTH => 32,
-        C_S00_AXI_ADDR_WIDTH => 4
+        C_S00_AXI_ADDR_WIDTH => 2
     )
     port map (
         s00_axi_aclk	=> clk,
@@ -128,12 +132,13 @@ begin
     begin
         test_runner_setup(runner, runner_cfg);
             if run("Perform simple transfers") then
-            address <= "0100";
+            address <= "01";
             data <= x"01010101";
             expected_bresp <="00";
 
-            write_axi_lite(net, axil_bus, address, data, expected_bresp, byte_enable);        
-            --write_bus(net, axil_bus, address, data, byte_enable);           
+          
+            write_axi_lite(net, axil_bus, address, data, expected_bresp);        
+            --write_bus(net, axil_bus, address, data);           
         end if;            
         test_runner_cleanup(runner);
     end process;
