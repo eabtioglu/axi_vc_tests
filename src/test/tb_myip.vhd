@@ -30,7 +30,7 @@ architecture tb of tb_myip is
     signal clk      : std_logic := '0';                                                
     signal axil_m2s : axil_m2s_t := axil_m2s_init;
     signal axil_s2m : axil_s2m_t;
-    signal aresetn	: std_logic:='0';
+    signal aresetn	: std_logic:='1'; --a
     signal awprot   : std_logic_vector(2 downto 0):="000";
     signal arprot   : std_logic_vector(2 downto 0):="000";
     signal address  : std_logic_vector(1 downto 0);
