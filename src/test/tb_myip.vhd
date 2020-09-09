@@ -132,8 +132,8 @@ begin
             data <= x"01010101";
             expected_bresp <="00";
 
-            --write_axi_lite(net, axil_bus, address, data, expected_bresp, byte_enable);        
-            write_bus(net, axil_bus, address, data, byte_enable);           
+            write_axi_lite(net, axil_bus, address, data, expected_bresp, byte_enable);        
+            --write_bus(net, axil_bus, address, data, byte_enable);           
         end if;            
         test_runner_cleanup(runner);
     end process;
