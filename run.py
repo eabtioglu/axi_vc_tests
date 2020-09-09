@@ -25,6 +25,10 @@ VU.add_com()
 VU.add_verification_components()
 
 SRC_PATH = Path(__file__).parent / "src"
+#clear
+# VU.add_library("data_types").add_source_files("/home/emrah/git/vunit/vunit/vhdl/data_types/src/*.vhd")
+#VU.add_library("com_lib").add_source_files("/home/emrah/git/vunit/vunit/vhdl/com/src/*.vhd")
+#VU.add_library("vc_lib").add_source_files("/home/emrah/git/vunit/vunit/vhdl/verification_components/src/*.vhd")
 
 VU.add_library("lib").add_source_files([SRC_PATH / "*.vhd", SRC_PATH / "test" / "*.vhd"])
 

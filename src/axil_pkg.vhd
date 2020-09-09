@@ -13,7 +13,7 @@ package axil_pkg is
 
   type axil_addr_m2s_t is record
     valid : std_logic;
-    addr : std_logic_vector(32-1 downto 0);
+    addr : std_logic_vector(4-1 downto 0);
   end record;
   constant axil_addr_m2s_init : axil_addr_m2s_t := (valid => '0',
                                                     addr => (others => '0'));

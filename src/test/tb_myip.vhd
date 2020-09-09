@@ -23,26 +23,26 @@ architecture tb of tb_myip is
     constant clk_period : time := 1 ns;
 
     constant axil_bus : bus_master_t := new_bus(data_length => 32,
-                                                address_length => 2,
+                                                address_length => 4,
                                                 logger => get_logger("axil_bus"));
 
 
     signal clk      : std_logic := '0';                                                
     signal axil_m2s : axil_m2s_t := axil_m2s_init;
     signal axil_s2m : axil_s2m_t;
-    signal aresetn	: std_logic:='1'; --a
+    signal aresetn	: std_logic:='1';
     signal awprot   : std_logic_vector(2 downto 0):="000";
     signal arprot   : std_logic_vector(2 downto 0):="000";
-    signal address  : std_logic_vector(1 downto 0);
+    signal address  : std_logic_vector(3 downto 0);
     signal data     : std_logic_vector(31 downto 0);
     signal expected_bresp : std_logic_vector(1 downto 0);
-    signal byte_enable : std_logic_vector(3 downto 0) := "1111";
+    --signal byte_enable : std_logic_vector(3 downto 0) := "1111";
 
     component myip_v1_0 is
         generic (
 
             C_S00_AXI_DATA_WIDTH	: integer	:= 32;
-            C_S00_AXI_ADDR_WIDTH	: integer	:= 2
+            C_S00_AXI_ADDR_WIDTH	: integer	:= 4
         );
         port (
 
@@ -75,7 +75,7 @@ begin
     dut: myip_v1_0 
     generic map(
         C_S00_AXI_DATA_WIDTH => 32,
-        C_S00_AXI_ADDR_WIDTH => 2
+        C_S00_AXI_ADDR_WIDTH => 4
     )
     port map (
         s00_axi_aclk	=> clk,
@@ -132,12 +132,16 @@ begin
     begin
         test_runner_setup(runner, runner_cfg);
             if run("Perform simple transfers") then
-            address <= "01";
+            address <= "0000";
             data <= x"01010101";
             expected_bresp <="00";
-
+            aresetn <='0';
+            wait for 100 ns; 
+            aresetn <='1';
+            wait for 20 ns;                
           
-            write_axi_lite(net, axil_bus, address, data, expected_bresp);        
+            write_axi_lite(net, axil_bus, address, data, expected_bresp, byte_enable => "1111");   
+            wait for 1000 ns;     
             --write_bus(net, axil_bus, address, data);           
         end if;            
         test_runner_cleanup(runner);
